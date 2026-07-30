@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "name": "Krmzy Arabic",
   "description": "Arabic provider for Nuvio",
+  "icon": "https://krmzi.net/favicon.ico",
   "resources": ["stream"],
   "types": ["movie", "series"],
   "idPrefixes": ["tt"],
@@ -12,6 +13,12 @@
       "id": "krmzy_arabic",
       "name": "Krmzy Arabic",
       "type": "movie",
+      "script": "providers/krmzy.js"
+    },
+    {
+      "id": "krmzy_arabic_series",
+      "name": "Krmzy Arabic Series",
+      "type": "series",
       "script": "providers/krmzy.js"
     }
   ]
