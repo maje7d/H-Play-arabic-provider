@@ -3,12 +3,10 @@
   "author": "maje7d",
   "plugins": [
     {
-      "name": "Krmzy Arabic",
       "id": "com.maje7d.krmzy",
+      "name": "Krmzy Arabic",
       "version": "1.0.0",
-      "manifest": "manifest.json",
-      "classPath": "providers/krmzy.js",
-      "flags": ["movie", "series"]
+      "manifest": "manifest.json"
     }
   ]
 }
