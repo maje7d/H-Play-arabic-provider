@@ -2,14 +2,14 @@
   "id": "com.arabic.nuvio.provider",
   "name": "Arabic Provider (Krmzy)",
   "version": "1.0.0",
-  "description": "إضافة لمحتوى الأفلام والمسلسلات العربية",
-  "icon": "https://krmzy.net/favicon.ico",
+  "description": "Arabic Provider for Nuvio",
+  "manifestVersion": 1,
   "providers": [
     {
       "id": "krmzy_arabic",
       "name": "Krmzy Arabic",
-      "script": "providers/krmzy.js",
-      "types": ["movie", "series"]
+      "manifest": "providers/krmzy.js",
+      "type": "movie"
     }
   ]
 }
