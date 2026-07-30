@@ -1,15 +1,17 @@
 {
   "id": "com.maje7d.krmzy",
-  "name": "Krmzy Arabic Provider",
-  "version": "1.0.1",
-  "description": "مستخرج سيرفرات المشاهدة لموقع قرمزي للأفلام والمسلسلات",
+  "name": "Krmzy Repository",
+  "version": "1.0.0",
+  "description": "Arabic Provider for Nuvio",
   "manifestVersion": 1,
   "providers": [
     {
       "id": "krmzy_arabic",
       "name": "Krmzy Arabic",
-      "manifest": "providers/krmzy.js",
-      "type": "movie"
+      "version": "1.0.0",
+      "script": "providers/krmzy.js",
+      "type": "movie",
+      "status": "active"
     }
   ]
 }
