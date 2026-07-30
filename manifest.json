@@ -1,15 +1,7 @@
 {
-  "id": "com.maje7d.arabic.provider",
-  "name": "Arabic Providers",
+  "id": "com.maje7d.krmzy",
+  "name": "Krmzy Arabic",
   "version": "1.0.0",
-  "description": "Arabic Content Provider for Nuvio",
-  "providers": [
-    {
-      "id": "krmzy-arabic",
-      "name": "Krmzy Arabic",
-      "version": "1.0.0",
-      "type": "movie",
-      "script": "https://raw.githubusercontent.com/maje7d/H-Play-arabic-provider/main/providers/krmzy.js"
-    }
-  ]
+  "manifestVersion": 1,
+  "plugin": "providers/krmzy.js"
 }
