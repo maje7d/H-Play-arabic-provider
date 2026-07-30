@@ -1,93 +1,77 @@
 /**
- * Nuvio Provider Template
- * Compatible with Nuvio App
+ * Nuvio Provider Script - Krmzy Arabic
+ * Domain: https://krmzi.org
  */
 
-// 1. إعدادات الهيدرز لتجاوز الحظر و Cloudflare
+const BASE_URL = 'https://krmzi.org';
+
 const DEFAULT_HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-  'Connection': 'keep-alive'
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+  'Referer': `${BASE_URL}/`,
+  'Accept-Language': 'ar,en-US;q=0.9,en;q=0.8'
 };
 
-// 2. قائمة بالنطاقات المحتملة للموقع
-const BASE_DOMAINS = [
-  'https://krmzy.net',
-  'https://krmzy.org',
-  'https://krmzy.tv'
-];
-
-// دالة التحقق من النطاق الشغال
-async function getActiveDomain() {
-  for (const domain of BASE_DOMAINS) {
-    try {
-      const res = await fetch(domain, { method: 'HEAD', headers: DEFAULT_HEADERS });
-      if (res.ok) return domain;
-    } catch (e) {
-      continue;
-    }
-  }
-  return BASE_DOMAINS[0]; // النطاق الافتراضي
-}
-
-// 3. الدالة الرئيسية التي يستدعيها Nuvio للجلب
 async function getStreams(item) {
   const streams = [];
-  const domain = await getActiveDomain();
-  const searchTitle = encodeURIComponent(item.title);
-
+  
   try {
-    // أ) إجراء البحث في الموقع
-    const searchUrl = `${domain}/?s=${searchTitle}`;
-    const searchRes = await fetch(searchUrl, { 
-      headers: { ...DEFAULT_HEADERS, 'Referer': domain } 
-    });
-    const searchHtml = await searchRes.text();
+    // 1. البحث عن عنوان الفيلم/المسلسل في الموقع
+    const searchQuery = encodeURIComponent(item.title || item.name);
+    const searchUrl = `${BASE_URL}/?s=${searchQuery}`;
+    
+    const searchResponse = await fetch(searchUrl, { headers: DEFAULT_HEADERS });
+    if (!searchResponse.ok) return [];
+    
+    const searchHtml = await searchResponse.text();
 
-    // ب) استخراج رابط أول نتيجة من صفحة البحث (Regex)
-    const linkMatch = searchHtml.match(/href="(https?:\/\/[^\"]*(?:post|movie|watch|video|series)[^\"]*)"/i);
-    if (!linkMatch) return [];
+    // 2. استخراج رابط صفحة العرض الأولى من نتائج البحث
+    const linkRegex = /<a[^>]+href="(https?:\/\/[^"]*(?:post|movie|watch|video|series|film)[^"]*)"[^>]*>/gi;
+    const match = linkRegex.exec(searchHtml);
+    
+    if (!match || !match[1]) return [];
+    const pageUrl = match[1];
 
-    const targetPageUrl = linkMatch[1];
+    // 3. جلب صفحة المشاهدة
+    const pageResponse = await fetch(pageUrl, { headers: DEFAULT_HEADERS });
+    if (!pageResponse.ok) return [];
+    
+    const pageHtml = await pageResponse.text();
 
-    // ج) جلب صفحة المشاهدة
-    const pageRes = await fetch(targetPageUrl, { 
-      headers: { ...DEFAULT_HEADERS, 'Referer': searchUrl } 
-    });
-    const pageHtml = await pageRes.text();
-
-    // د) استخراج مشغلات الفيديو والـ iFrames
+    // 4. استخراج روابط المشاهدة والسيرفرات من داخل iframes
     const iframeRegex = /<iframe[^>]+src=["']([^"']+)["']/gi;
-    let match;
+    let iframeMatch;
+    let counter = 1;
 
-    while ((match = iframeRegex.exec(pageHtml)) !== null) {
-      let srcUrl = match[1];
-
+    while ((iframeMatch = iframeRegex.exec(pageHtml)) !== null) {
+      let streamUrl = iframeMatch[1];
+      
       // تصحيح الروابط النسبية
-      if (srcUrl.startsWith('//')) {
-        srcUrl = 'https:' + srcUrl;
+      if (streamUrl.startsWith('//')) {
+        streamUrl = 'https:' + streamUrl;
+      } else if (streamUrl.startsWith('/')) {
+        streamUrl = BASE_URL + streamUrl;
       }
 
-      // تصفية الروابط المستخرجة لتجنب الإعلانات
-      if (srcUrl.includes('player') || srcUrl.includes('embed') || srcUrl.includes('v=')) {
-        streams.push({
-          name: "سيرفر عربي (Krmzy)",
-          title: `${item.title} - 1080p / 720p`,
-          url: srcUrl,
-          quality: "1080p",
-          headers: {
-            'Referer': targetPageUrl,
-            'User-Agent': DEFAULT_HEADERS['User-Agent']
-          }
-        });
+      // إستبعاد الإعلانات السريعة
+      if (streamUrl.includes('facebook') || streamUrl.includes('google') || streamUrl.includes('twitter')) {
+        continue;
       }
+
+      streams.push({
+        name: `Krmzy Server ${counter}`,
+        title: `${item.title || 'Movie'} - 1080p`,
+        url: streamUrl,
+        quality: "1080p",
+        headers: DEFAULT_HEADERS
+      });
+
+      counter++;
     }
 
     return streams;
 
   } catch (error) {
-    console.error("Nuvio Provider Error:", error);
+    console.error("Krmzy Provider Error:", error);
     return [];
   }
 }
