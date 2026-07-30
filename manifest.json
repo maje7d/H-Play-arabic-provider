@@ -1,7 +1,18 @@
 {
   "id": "com.maje7d.krmzy",
-  "name": "Krmzy Arabic",
   "version": "1.0.0",
-  "manifestVersion": 1,
-  "plugin": "providers/krmzy.js"
+  "name": "Krmzy Arabic",
+  "description": "Arabic provider for Nuvio",
+  "resources": ["stream"],
+  "types": ["movie", "series"],
+  "idPrefixes": ["tt"],
+  "catalogs": [],
+  "providers": [
+    {
+      "id": "krmzy_arabic",
+      "name": "Krmzy Arabic",
+      "type": "movie",
+      "script": "providers/krmzy.js"
+    }
+  ]
 }
