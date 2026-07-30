@@ -6,6 +6,7 @@
       "name": "Krmzy Arabic",
       "id": "com.maje7d.krmzy",
       "version": "1.0.0",
+      "manifest": "manifest.json",
       "classPath": "providers/krmzy.js",
       "flags": ["movie", "series"]
     }
