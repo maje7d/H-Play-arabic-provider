@@ -10,8 +10,7 @@
       "name": "Krmzy Arabic",
       "version": "1.0.0",
       "script": "providers/krmzy.js",
-      "type": "movie",
-      "status": "active"
+      "type": "movie"
     }
   ]
 }
